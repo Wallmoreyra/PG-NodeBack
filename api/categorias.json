@@ -1,0 +1,36 @@
+{
+    "categorias": [
+        {
+            "id": 1,
+            "nombre": "RPG"
+        },
+        {
+            "id": 2,
+            "nombre": "Acción"
+        },
+        {
+            "id": 3,
+            "nombre": "Aventura"
+        },
+        {
+            "id": 4,
+            "nombre": "Arcade"
+        },
+        {
+            "id": 5,
+            "nombre": "Deportivo"
+        },
+        {
+            "id": 6,
+            "nombre": "Estrategia"
+        },
+        {
+            "id": 7,
+            "nombre": "Simulación"
+        },
+        {
+            "id": 8,
+            "nombre": "Musicales"
+        }
+    ]
+}

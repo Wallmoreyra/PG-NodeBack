@@ -1,0 +1,44 @@
+{
+    "consolas": [
+        {
+            "id": "1",
+            "nombre": "PC"
+        },
+        {
+            "id": "2",
+            "nombre": "Nintendo DS"
+        },
+        {
+            "id": "3",
+            "nombre": "PlayStation"
+        },
+        {
+            "id": "4",
+            "nombre": "Xbox"
+        },
+        {
+            "id": "5",
+            "nombre": "Nintendo Switch"
+        },
+        {
+            "id": "6",
+            "nombre": "PlayStation 2"
+        },
+        {
+            "id": "7",
+            "nombre": "Sega Saturn"
+        },
+        {
+            "id": "8",
+            "nombre": "PlayStation 4"
+        },
+        {
+            "id": "9",
+            "nombre": "Xbox 360"
+        },
+        {
+            "id": "10",
+            "nombre": "Nintendo 64"
+        }
+    ]
+}

@@ -1,0 +1,52 @@
+{
+    "games": [
+        {
+            "id": 1,
+            "nombre": "Half-Life 2",
+            "img":"https://guiadeparche.com/wp-content/uploads/2023/05/thumb-pc.jpg",
+            "desc":"Half-Life 2 es un juego de disparos en primera persona lanzado en 2004 y desarrollado por Valve Corporation. La historia sigue al protagonista, Gordon Freeman, en su lucha contra el régimen alienígena que ha conquistado la Tierra. El juego ofrece una jugabilidad fluida y una narrativa envolvente, y es considerado uno de los mejores juegos de PC de todos los tiempos.",
+            "categoria":["Acción","Aventura"],
+            "consola":["PC"]
+        },
+        {
+            "id": 2,
+            "nombre": "Portal 2",
+            "img":"https://w0.peakpx.com/wallpaper/29/567/HD-wallpaper-portal-video-game-portal-2.jpg",
+            "desc":"Portal 2 es un juego de rompecabezas en primera persona lanzado en 2011 y desarrollado por Valve Corporation. La historia sigue a los personajes Chell y Wheatley mientras intentan escapar de la instalación de pruebas de Aperture Science, utilizando el dispositivo de portales para resolver una variedad de desafiantes acertijos. El juego ofrece una narrativa intrigante y un sistema de juego adictivo, y es considerado uno de los mejores juegos de rompecabezas de todos los tiempos.",
+            "categoria":["Aventura"],
+            "consola":["PC"]
+        },
+        {
+            "id": 3,
+            "nombre": "Grand Theft Auto V",
+            "img":"https://phantom-marca.unidadeditorial.es/ad2ab8ad9ad9c4c570ef5ccebe2ff3d0/crop/0x0/1246x701/resize/1200/f/webp/assets/multimedia/imagenes/2022/03/09/16468419046177.jpg",
+            "desc":"Grand Theft Auto V es un juego de acción y aventura en tercera persona lanzado en 2013 y desarrollado por Rockstar North. La historia sigue a tres personajes jugables que se involucran en una variedad de actividades criminales en la ciudad ficticia de Los Santos. El juego ofrece una jugabilidad rica y diversa, con una historia épica y personajes memorables.",
+            "categoria":["Acción"],
+            "consola":["PC","PlayStation 4"]
+        },
+        {
+            "id": 4,
+            "nombre": "The Witcher 3: Wild Hunt",
+            "img":"https://media.vandal.net/master/3-2023/20233520343041_1.jpg",
+            "desc":"The Witcher 3: Wild Hunt es un juego de rol de acción en tercera persona lanzado en 2015 y desarrollado por CD Projekt RED. La historia sigue a Geralt de Rivia, un cazador de monstruos, en su búsqueda para encontrar a su hija adoptiva Ciri en un mundo lleno de peligros y conflictos. El juego ofrece una jugabilidad profunda y emocional, una narrativa épica y personajes inolvidables.",
+            "categoria":["Aventura","RPG"],
+            "consola":["PC","PlayStation 4"]
+        },
+        {
+            "id": 5,
+            "nombre": "BioShock",
+            "img":"https://i.blogs.es/5fecf8/050620-bioshock-analisis/1366_521.jpeg",
+            "desc":"BioShock es un juego de disparos en primera persona lanzado en 2007 y desarrollado por Irrational Games. La historia tiene lugar en la ciudad submarina de Rapture en 1960, donde el jugador asume el papel del personaje principal, Jack, mientras lucha por sobrevivir en un mundo lleno de peligros y misterios. El juego ofrece una jugabilidad envolvente y un mundo emocionante y misterioso que se desarrolla a través de una historia profunda y conmovedora.",
+            "categoria":["Aventura","RPG"],
+            "consola":["PC","PlayStation 4"]
+        },
+        {
+            "id": 6,
+            "nombre": "Red Dead Redemption 2",
+            "img":"https://arc-anglerfish-arc2-prod-infobae.s3.amazonaws.com/public/RCVN57YFWFBNBJO3VM4IS3ZO3U.jpg",
+            "desc":"Red Dead Redemption 2 es un juego de acción y aventuras desarrollado y publicado por Rockstar Games en 2018. El juego tiene lugar en el Viejo Oeste de los Estados Unidos a finales del siglo XIX, y sigue la historia de Arthur Morgan, un miembro de la banda de forajidos Van der Linde que lucha por sobrevivir en un mundo peligroso y cambiante. La historia de Red Dead Redemption 2 es emocionante y bien escrita, y se centra en la vida de los miembros de la banda de Van der Linde mientras tratan de sobrevivir en un mundo que está cambiando rápidamente. La jugabilidad del juego es variada y emocionante, con una amplia gama de misiones principales y secundarias que ofrecen muchas horas de diversión.",
+            "categoria":["Acción","Aventura"],
+            "consola":["PC","PlayStation 4"]
+        }
+    ]
+}
