@@ -1,6 +1,9 @@
 const consolContr = require('../controllers/ConsolCont.js');
 const categContr = require('../controllers/CategCont.js');
-const {gamesInDB, gamesFromAPI, gamesToDB} = require('../utils/funGames');
+const {gamesInDB, gamesFromAPI, gamesToDB, searchConsolIDInDB, searchCategIDInDB, createGameInDB, searchNameInDB} = require('../utils/funGames');
+const { consolasInDB, categoriasInDB } = require('../utils/funcCons&Cat.js');
+const { companyInDB } = require('../utils/funCompany.js');
+const companyContr = require('./CompCont.js');
 
 
 
@@ -12,6 +15,7 @@ const gamesContr = async() => {
         if(gamesAux.length === 0){
             await consolContr();
             await categContr();
+            await companyContr();
             const games = await gamesFromAPI();
             await gamesToDB(games);
             return gamesInDB();
@@ -31,50 +35,46 @@ const gamesContr = async() => {
 const createGameDB = async(nombre, descripcion, img, categorias, consola) => {
 
     try{
-        let gamesAux = await gamesInDB();
+        let consAux = await consolasInDB();
+        let catAux = await categoriasInDB();
+        let compAux = await companyInDB();
 
-        if(gamesAux.length === 0){
-            await consolContr();
-            await categContr();
+        if (consAux.length === 0 || catAux.length === 0 || compAux) {
+            await Promise.all([consolContr(), categContr(), companyContr()]);
+    
+            // Vuelve a consultar la base de datos después de que se hayan ejecutado las funciones
+            consAux = await consolasInDB();
+            catAux = await categoriasInDB();
+            compAux = await companyInDB();
+        } 
 
-
-
-            return gamesInDB();
-
-            //console.log(games)
-        }else {
-            //trae la informacion de la base de datos
-            return ;
-        }
+        const ConsolDBID = await searchConsolIDInDB(consola);
+        const CategDBID = await searchCategIDInDB(categorias);
         
+        const GamesNameCreated = await searchNameInDB(nombre);
+        //console.log(GamesNameCreated)
+
+        //----- Falta agregar un verificador para las imagenes!!!!!
+
+        // console.log(consAux);
+        // console.log(catAux);
+        // console.log(ConsolDBID);
+        // console.log(CategDBID);
+        //console.log(catAux);
+        //let variables = await consAux;
+
+        if(ConsolDBID.length > 0 && CategDBID.length > 0 && GamesNameCreated === false){
+            const juego = await createGameInDB(nombre, descripcion, img, CategDBID, ConsolDBID);
+            //console.log(juego)
+            return juego;
+        }
 
     } catch (error) {
         throw new Error(`Error: ${error.message}`);
-    }
-
-
-
-        const teamsDB = await searchTeamsInDB(teams);
-        const nameAndSurname = await searchNameSurname(name, surname);
-        //console.log(nameAndSurname)
-        if(nameAndSurname === 'si') {
-            throw new Error(`Ya existe el Conductor ${name} ${surname} en la DB o en la API`);
         }
-        if(teamsDB.length < 2){
-            throw new Error(`Necesita mas de un equipo!!!`);
-        }
-        const teamsID = await searchTeamsIDInDB(teamsDB);
-        //console.log(teams);
-        //console.log(teamsDB.length);
-        //console.log(teamsID);
-        const driverCreate = await createDriverInDB(name, surname, description, image, nationality, birthdate, teamsID);
-
-        return driverCreate;
-        //return `vamos a crear el driver con ${name} ${surname} ${description} ${image} ${nationality} ${teamsDB}`
-    
-    }
+}
 
 
 
-    
+
 module.exports = {gamesContr, createGameDB};

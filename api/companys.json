@@ -1,0 +1,44 @@
+{
+    "desarrolladores": [
+        {
+            "id": "1",
+            "nombre": "Steam"
+        },
+        {
+            "id": "2",
+            "nombre": "Valve Corporation"
+        },
+        {
+            "id": "3",
+            "nombre": "Rockstar Games"
+        },
+        {
+            "id": "4",
+            "nombre": "CD Projekt"
+        },
+        {
+            "id": "5",
+            "nombre": "Irrational Games"
+        },
+        {
+            "id": "6",
+            "nombre": "Riot Games"
+        },
+        {
+            "id": "7",
+            "nombre": "Playground Games"
+        },
+        {
+            "id": "8",
+            "nombre": "The Indie Stone"
+        },
+        {
+            "id": "9",
+            "nombre": "Rebellion Developments"
+        },
+        {
+            "id": "10",
+            "nombre": "Natsume Inc"
+        }
+    ]
+}

@@ -1,5 +1,5 @@
 
-const {Games, Category, Consol} = require('../database');
+const {Games, Category, Consol, Company} = require('../database');
 
 
 const fs = require('fs').promises;
@@ -81,8 +81,20 @@ const gamesToDB = async (array) => {
 
                 const consoles = await getOrCreateConsolas(item.consola);
                 await juego.addConsol(consoles);
+
+                //Buscamos la companya que tiene relacion
+                const company = await Company.findOne({ where: { nombre: item.desarrollador } });
+                if (!company) {
+                    throw new Error(`La compañía ${item.desarrollador} no existe en la base de datos.`);
+                }
+                // Asociar el juego a la compañía
+                await juego.setCompany(company);
+
+                // Asociar el juego a la compañía
+                //await juego.setCompany(item.desarrollador);
+                console.log(company)
                 
-                console.log(`Juego creado: ${juego.nombre}`);
+                //console.log(`Juego creado: ${juego.nombre}`);
 
                 //console.log(juego)
                 //return juego;
@@ -122,7 +134,105 @@ const getOrCreateConsolas = async (console) => {
     return consoleInstances;
 };
 
+// Funciones para encontrar las id de las categorias y consolas
+const searchConsolIDInDB = async (array) => {
+    
+    try {
+        //console.log(array);
+
+        // Obtener todas las consolas de la base de datos
+        const allConsols = await Consol.findAll();
+
+        // Filtrar las consolas que coincidan ignorando mayúsculas y minúsculas
+        const consIDS = allConsols.filter(consol =>
+            array.some(name => consol.nombre.toLowerCase() === name.toLowerCase())
+        ).map(consol => consol.id);
+
+        //console.log(consIDS);
+        return consIDS;
+    } catch (error) {
+        console.error('Error al buscar las IDs de las consolas:', error);
+        throw new Error('Error al buscar las IDs de las consolas');
+    }
+}
+
+const searchCategIDInDB = async (array) => {
+    try {
+        //console.log(array);
+
+        // Obtener todas las categorias de la base de datos
+        const allCateg = await Category.findAll();
+
+        // Filtrar las categorias que coincidan ignorando mayúsculas y minúsculas
+        const cateIDS = allCateg.filter(categ =>
+            array.some(name => categ.nombre.toLowerCase() === name.toLowerCase())
+        ).map(categ => categ.id);
+
+        //console.log(cateIDS);
+        return cateIDS;
+    } catch (error) {
+        console.error('Error al buscar las IDs de las categorias:', error);
+        throw new Error('Error al buscar las IDs de las categorias');
+    }
+}
+
+// Funcion POST para crear el juego en la base de datos con sus relaciones:
+const createGameInDB = async (nombre, descripcion, img, CategDBID, ConsolDBID) => {
+
+    try {
+        
+        const game = await Games.create({
+            nombre,
+            descripcion,
+            img
+        });
+        
+        game.addCategory(CategDBID);
+        game.addConsol(ConsolDBID);
+
+      
+        const allConsols = await Consol.findAll();
+        const allCategory = await Category.findAll();
+
+        const nombresConsolas = allConsols.filter(consol =>
+            ConsolDBID.some(id => consol.id === id)
+        ).map(consol => consol.nombre);
+
+        const nombresCategorias = allCategory.filter(cate =>
+            CategDBID.some(id => cate.id === id)
+        ).map(cate => cate.nombre);
+        
+
+        //console.log(nombresConsolas)
+        //console.log(nombresCategorias)
+
+
+        return {
+            id: game.id,
+            nombre: game.nombre,
+            descripcion: game.descripcion,
+            img: game.img,
+            categorias: nombresCategorias ? nombresCategorias : [],
+            consola: nombresConsolas ? nombresConsolas : []
+        };
+        
+    } catch (error) {
+        throw new Error('Error al crear el Juego en la DB: ' + error.message);
+    }
+}
+
+const searchNameInDB = async(nombre) => {
+    try {
+        const gameExist = await Games.findOne({ where: { nombre: nombre }});
+        //console.log(gameExist);
+        return gameExist ? true : false;
+    } catch (error) {
+        console.error('Error al buscar el juego en la base de datos:', error);
+        throw new Error('Error al buscar el juego en la base de datos');
+    }
+}
 
 
 
-module.exports = {gamesInDB, gamesFromAPI, gamesToDB}
+
+module.exports = {gamesInDB, gamesFromAPI, gamesToDB, searchConsolIDInDB, searchCategIDInDB, createGameInDB, searchNameInDB};

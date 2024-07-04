@@ -68,7 +68,7 @@ let capsEntries = entries.map(([name, model]) => [name[0].toUpperCase() + name.s
 sequelize.models = Object.fromEntries(capsEntries);
 
 
-const { Games, Category, Consol } = sequelize.models;
+const { Games, Category, Consol, Company } = sequelize.models;
 
 // Aca vendrian las relaciones
 Games.belongsToMany(Category, {through: 'games_cat',timestamps: false});
@@ -76,6 +76,10 @@ Category.belongsToMany(Games, {through: 'games_cat',timestamps: false});
 
 Games.belongsToMany(Consol, {through: 'games_consol',timestamps: false});
 Consol.belongsToMany(Games, {through: 'games_consol',timestamps: false});
+
+// Relación uno a muchos con Company
+Company.hasMany(Games, { foreignKey: 'companyId', timestamps: false });
+Games.belongsTo(Company, { foreignKey: 'companyId', timestamps: false });
 
 // Exporta los modelos y la conexión
 module.exports = {
