@@ -71,15 +71,15 @@ sequelize.models = Object.fromEntries(capsEntries);
 const { Games, Category, Consol, Company } = sequelize.models;
 
 // Aca vendrian las relaciones
-Games.belongsToMany(Category, {through: 'games_cat',timestamps: false});
-Category.belongsToMany(Games, {through: 'games_cat',timestamps: false});
+Games.belongsToMany(Category, {through: 'games_cat', onDelete: 'CASCADE',timestamps: false});
+Category.belongsToMany(Games, {through: 'games_cat', onDelete: 'CASCADE',timestamps: false});
 
-Games.belongsToMany(Consol, {through: 'games_consol',timestamps: false});
-Consol.belongsToMany(Games, {through: 'games_consol',timestamps: false});
+Games.belongsToMany(Consol, {through: 'games_consol', onDelete: 'CASCADE',timestamps: false});
+Consol.belongsToMany(Games, {through: 'games_consol', onDelete: 'CASCADE',timestamps: false});
 
 // Relación uno a muchos con Company
-Company.hasMany(Games, { foreignKey: 'companyId', timestamps: false });
-Games.belongsTo(Company, { foreignKey: 'companyId', timestamps: false });
+Company.hasMany(Games, { foreignKey: 'companyId', onDelete: 'CASCADE', timestamps: false });
+Games.belongsTo(Company, { foreignKey: 'companyId', onDelete: 'CASCADE', timestamps: false });
 
 // Exporta los modelos y la conexión
 module.exports = {

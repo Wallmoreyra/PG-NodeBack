@@ -16,7 +16,7 @@ const { conn } = require('./database');
 
 console.log(process.env.TESTING);
 
-conn.sync({ force: true }) // Cambia a true si deseas recrear las tablas en cada inicio
+conn.sync({ force: false }) // Cambia a true si deseas recrear las tablas en cada inicio
   .then(() => {
     app.listen(app.get('port'), () => {
       console.log('Servidor escuchando en puerto: ', app.get('port'));

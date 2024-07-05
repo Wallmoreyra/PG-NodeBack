@@ -1,4 +1,5 @@
 
+const { Console } = require('console');
 const {Games, Category, Consol, Company} = require('../database');
 
 
@@ -10,10 +11,7 @@ const filePath = path.join(__dirname, '../../api/games.json');
 
 //Buscar las consolas en la base de datos
 const gamesInDB = async () => {
-    // const allGamesDB = await games.findAll();
-    // console.log(allGamesDB)
-    // //return allGamesDB.map(item => item.nombre);
-    // return allGamesDB;
+
     try {
         const allGamesDB = await Games.findAll({
             include: [
@@ -24,7 +22,8 @@ const gamesInDB = async () => {
                 {
                     model: Consol,
                     through: { attributes: [] } // Si también deseas incluir las consolas
-                }
+                },
+                Company  // Incluir la relación con la compañía
             ], order: [['createdAt', 'DESC']]
         });
 
@@ -37,7 +36,8 @@ const gamesInDB = async () => {
             img: game.img,
             
             categorias: game.categories ? game.categories.map(category => category.nombre) : [], // Asumiendo que el atributo es 'nombre'
-            consola: game.consols.map(consol => consol.nombre) // Asumiendo que el atributo es 'nombre'
+            consola: game.consols.map(consol => consol.nombre), // Asumiendo que el atributo es 'nombre'
+            desarrollador: game.company.nombre
         }));
     } catch (error) {
         console.error('Error al obtener los juegos de la base de datos:', error);
@@ -64,7 +64,9 @@ const gamesFromAPI = async () => {
 const gamesToDB = async (array) => {
     for (const item of array) {
         try {
-            // comprobar si los teams ya existen en la DB
+
+            //console.log(array)
+            
             const gameExist = await Games.findOne({ where: { nombre: item.nombre }});
 
             if (!gameExist) {
@@ -90,9 +92,7 @@ const gamesToDB = async (array) => {
                 // Asociar el juego a la compañía
                 await juego.setCompany(company);
 
-                // Asociar el juego a la compañía
-                //await juego.setCompany(item.desarrollador);
-                console.log(company)
+                //console.log(company)
                 
                 //console.log(`Juego creado: ${juego.nombre}`);
 
@@ -177,7 +177,7 @@ const searchCategIDInDB = async (array) => {
 }
 
 // Funcion POST para crear el juego en la base de datos con sus relaciones:
-const createGameInDB = async (nombre, descripcion, img, CategDBID, ConsolDBID) => {
+const createGameInDB = async (nombre, descripcion, img, CategDBID, ConsolDBID, CompDBID) => {
 
     try {
         
@@ -189,6 +189,7 @@ const createGameInDB = async (nombre, descripcion, img, CategDBID, ConsolDBID) =
         
         game.addCategory(CategDBID);
         game.addConsol(ConsolDBID);
+        game.setCompany(CompDBID);
 
       
         const allConsols = await Consol.findAll();
@@ -203,9 +204,16 @@ const createGameInDB = async (nombre, descripcion, img, CategDBID, ConsolDBID) =
         ).map(cate => cate.nombre);
         
 
-        //console.log(nombresConsolas)
-        //console.log(nombresCategorias)
 
+        // Recuperar el juego junto con sus relaciones
+        const gameWithAssociations = await Games.findOne({
+            where: { id: game.id },
+            include: [
+                { model: Company }
+            ]
+        });
+
+        //console.log(gameWithAssociations)
 
         return {
             id: game.id,
@@ -213,7 +221,8 @@ const createGameInDB = async (nombre, descripcion, img, CategDBID, ConsolDBID) =
             descripcion: game.descripcion,
             img: game.img,
             categorias: nombresCategorias ? nombresCategorias : [],
-            consola: nombresConsolas ? nombresConsolas : []
+            consola: nombresConsolas ? nombresConsolas : [],
+            desarrollador: gameWithAssociations.company.nombre
         };
         
     } catch (error) {
@@ -232,7 +241,180 @@ const searchNameInDB = async(nombre) => {
     }
 }
 
+// Funcion que busca la companya por el id
+const searchCompIDInDB = async(nombre) => {
+    try {
+        // Obtener todas las compañías de la base de datos
+        const allCompanies = await Company.findAll();
+        
+        // Filtrar las compañías que coincidan ignorando mayúsculas y minúsculas
+        const matchingCompany = allCompanies.filter(company =>
+            company.nombre.toLowerCase() === nombre.toLowerCase()
+        )[0];
+
+        if (matchingCompany) {
+            //console.log(matchingCompany.id);
+            return matchingCompany.id;
+        } else {
+            console.log(`Compañía con nombre ${nombre} no encontrada`);
+            return null;
+        }
+    } catch (error) {
+        console.error('Error al buscar la compania en la base de datos:', error);
+        throw new Error('Error al buscar la compania en la base de datos');
+    }
+}
+
+// Funcion que busca el juego por ID
+
+const getGameByID = async (id) => {
+
+    const game = await Games.findByPk(id, {
+        include: [
+            {
+                model: Category,
+                through: { attributes: [] } // Excluye los atributos de la tabla intermedia
+            },
+            {
+                model: Consol,
+                through: { attributes: [] } // Si también deseas incluir las consolas
+            },
+            Company  // Incluir la relación con la compañía
+        ]
+    });
+
+    if (game === '' || game === null) {
+        throw new Error('No se encontro el juego con esa ID en la DB!!!');
+    }
+
+    return auxGame  = ({
+        id: game.id,
+        nombre: game.nombre,
+        descripcion: game.descripcion,
+        img: game.img,
+        categorias: game.categories ? game.categories.map(category => category.nombre) : [], // Asumiendo que el atributo es 'nombre'
+        consola: game.consols.map(consol => consol.nombre), // Asumiendo que el atributo es 'nombre'
+        desarrollador: game.company.nombre
+    });
+
+    //console.log(auxGame)
+
+}
+
+const deleteGameByID = async (id) => {
+
+    console.log(id)
+
+    const game = await Games.findByPk(id, {
+        include: [
+            {
+                model: Category,
+                through: { attributes: [] } // Excluye los atributos de la tabla intermedia
+            },
+            {
+                model: Consol,
+                through: { attributes: [] } // Si también deseas incluir las consolas
+            },
+            Company  // Incluir la relación con la compañía
+        ]
+    });
+
+    if (game === '' || game === null) {
+        throw new Error('No se encontro el juego con esa ID en la DB!!!');
+    }
+
+    const auxGame = {
+        id: game.id,
+        nombre: game.nombre,
+        descripcion: game.descripcion,
+        img: game.img,
+        categorias: game.categories ? game.categories.map(category => category.nombre) : [], // Asumiendo que el atributo es 'nombre'
+        consola: game.consols.map(consol => consol.nombre), // Asumiendo que el atributo es 'nombre'
+        desarrollador: game.company.nombre
+    };
+
+    // Eliminar el juego
+    await game.destroy();
+
+
+    //console.log(auxGame)
+
+    return auxGame;
+
+}
+
+// Funcion del metodo PUT update
+const updateGameByID = async (id, data) => {
+    const { nombre, descripcion, img, categorias, consolas, company } = data;
+
+    try {
+        const game = await Games.findByPk(id, {
+            include: [
+                { model: Category, through: { attributes: [] } },
+                { model: Consol, through: { attributes: [] } },
+                Company
+            ]
+        });
+
+        if (!game) {
+            throw new Error('No se encontró el juego con esa ID en la DB!!!');
+        }
+
+        // Actualizar la información del juego
+        game.nombre = nombre || game.nombre;
+        game.descripcion = descripcion || game.descripcion;
+        game.img = img || game.img;
+        
+        await game.save();
+
+        // Actualizar categorías
+        // if (categorias) {
+        //     const newCategories = await Category.findAll({ where: { id: categorias } });
+        //     await game.setCategories(newCategories);
+        // }
+
+        // // Actualizar consolas
+        // if (consolas) {
+        //     const newConsoles = await Consol.findAll({ where: { id: consolas } });
+        //     await game.setConsols(newConsoles);
+        // }
+
+        // // Actualizar compañía
+        // if (company) {
+        //     const newCompany = await Company.findByPk(company);
+        //     if (newCompany) {
+        //         await game.setCompany(newCompany);
+        //     }
+        // }
+
+        // Recargar las asociaciones actualizadas
+        // const updatedGame = await Games.findByPk(id, {
+        //     include: [
+        //         { model: Category, through: { attributes: [] } },
+        //         { model: Consol, through: { attributes: [] } },
+        //         Company
+        //     ]
+        // });
+
+        const GameActualizado = {
+            //id: updatedGame.id,
+            nombre: game.nombre,
+            descripcion: game.descripcion,
+            img: game.img,
+            //categorias: updatedGame.categories ? updatedGame.categories.map(category => category.nombre) : [],
+            //consolas: updatedGame.consols ? updatedGame.consols.map(consol => consol.nombre) : [],
+            //desarrollador: updatedGame.company ? updatedGame.company.nombre : null
+        };
+
+        console.log(GameActualizado);
+
+        return GameActualizado;
+
+    } catch (error) {
+        throw new Error('Error al actualizar el Juego en la DB: ' + error.message);
+    }
+};
 
 
 
-module.exports = {gamesInDB, gamesFromAPI, gamesToDB, searchConsolIDInDB, searchCategIDInDB, createGameInDB, searchNameInDB};
+module.exports = {gamesInDB, gamesFromAPI, gamesToDB, searchConsolIDInDB, searchCategIDInDB, createGameInDB, searchNameInDB, searchCompIDInDB, getGameByID, deleteGameByID, updateGameByID};
