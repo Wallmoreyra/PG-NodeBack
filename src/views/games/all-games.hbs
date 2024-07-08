@@ -1,0 +1,34 @@
+<hr>
+<div class="row">
+    {{#each gamesAux}}
+        <div class="card border-dark mb-3" style="max-width: 20rem; min-width: 15rem">
+            <div class="card-header all-cards-titulo">
+                <div>
+                    <h5>{{nombre}}</h5>
+
+                </div>
+                
+            </div>
+            <div class="card-body text-dark">
+                <div class="all-card-boton-borrado">
+                    <form id="deleteForm" action="/games/idGames/{{id}}?_method=DELETE" method="POST">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit" class="btn btn-danger btn-block btn-sn">
+                            Borrar
+                        </button>
+                    </form>
+                </div>
+                <div>
+                    <h5>Accesos:</h5>
+                </div>
+                <div class="all-cards-accesos">
+                    <h4 class="card-text">Detail:  <a href="/preview/{{_id}}"><i class="fas fa-info"></i></i></a></p>
+                    <h4 class="card-text">Img:  <a href="/edit/img/{{_id}}"><i class="fas fa-images"></i></a></h4>
+                    <h4 class="card-text">Edit:   <a href="/games/update/{{id}}"><i class="fas fa-edit"></i></a></h4>
+                </div>
+                
+            </div>
+        </div>
+    {{/each}}
+</div>
+<hr>

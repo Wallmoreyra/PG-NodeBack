@@ -1,0 +1,172 @@
+<script>
+    window.onload = function() {
+        // Event listener para el cambio en el input de archivos
+        document.getElementById('agreImg').addEventListener('change', function() {
+            const files = document.getElementById('agreImg').files;
+            procesarArchivos(files);
+        });
+
+        function procesarArchivos(files) {
+            const previewsContainer = document.getElementById('previews');
+            previewsContainer.innerHTML = '';
+
+            const file = files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const container = document.createElement('div');
+                    container.classList.add('imgContainer');
+
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.classList.add('prodImg');
+                    container.appendChild(img);
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'X';
+                    deleteButton.classList.add('btnBorrImg');
+                    deleteButton.addEventListener('click', function() {
+                        previewsContainer.removeChild(container);
+                        document.getElementById('agreImg').value = '';
+                    });
+                    container.appendChild(deleteButton);
+
+                    previewsContainer.appendChild(container);
+                };
+
+                reader.readAsDataURL(file);
+            } else {
+                console.error('El archivo ' + file.name + ' no es una imagen. Se ha omitido.');
+            }
+        }
+
+        // CHANGE PARA CATEGORIA
+        const selectCategoria = document.getElementById('selectCate');
+        const showCategoria = document.getElementById('showCate');
+
+        selectCategoria.addEventListener('change', function() {
+            showCategoria.textContent = this.value;
+            document.getElementById('categoria').value = this.value;
+        });
+        // CHANGE PARA CONSOLAS
+        const selectConsolas = document.getElementById('selectCons');
+        const showConsolas = document.getElementById('showCons');
+
+        selectConsolas.addEventListener('change', function() {
+            showConsolas.textContent = this.value;
+            document.getElementById('consolas').value = this.value;
+        });
+        // CHANGE PARA DESARROLLADOR
+        const selectDesarrollador = document.getElementById('selectDesarrollador');
+        const inputDesarrollador = document.getElementById('desarrollador');
+
+        selectDesarrollador.addEventListener('change', function() {
+            inputDesarrollador.value = this.value;
+        });
+    };
+</script>
+
+<div class="col-md-12 mx-auto">
+    <div class="card text-center">
+        <div class="card-header">
+            <h3>Editar Juego: {{auxGame.nombre}} id: {{auxGame.id}}</h3>
+        </div>
+        <div class="card-body">
+            <form action="/games/idGames/{{auxGame.id}}?_method=PUT" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="_method" value="PUT">
+                <div class="container">
+                    <div class="col-sm">
+                        <div class="detail-title">
+                            <a href="/" class="detail-title-volver">Volver</a>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Cambiar a nombre:</label>
+                            <input type="text" name="nombre" class="form-control" value="{{auxGame.nombre}}">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Descripcion:</label>
+                            <textarea name="descripcion" placeholder="Descripcion" class="form-control">{{auxGame.descripcion}}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="hidden" id="categoria" name="categoria" value="{{auxGame.categoria}}">
+                            <label class="">Categoria actual:</label>
+                            <br>
+                            <label class="">{{auxGame.categorias}}</label>
+                             
+                        </div>
+
+                        <div class="form-group">
+                            <h3>Cambiar a:</h3>
+                            <div class="row">
+                                {{#each ListaCategorias}}
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="categorias" value="{{nombre}}" id="categoria{{id}}">
+                                            <label class="form-check-label" for="categoria{{id}}">
+                                                {{nombre}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                {{/each}}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Desarrollador:</label>
+                            <select id="selectDesarrollador" class="form-select form-control">
+                                {{#each ListaDesarrolladores}}
+                                    <option value="{{nombre}}" {{#ifCond nombre ../auxGame.desarrollador}}selected{{/ifCond}}>{{nombre}}</option>
+                                {{/each}}
+                            </select>
+                            <input type="hidden" id="desarrollador" name="desarrollador" value="{{auxGame.desarrollador}}">
+                        </div>
+
+                        <div class="form-group">
+                            <input type="hidden" id="consolas" name="consolas" value="{{auxGame.consola}}">
+                            <label class="">Consolas actuales:</label>
+                            <br>
+                            <label class="">{{auxGame.consola}}</label>
+                             
+                        </div>
+
+                        <div class="form-group">
+                            <h3>Consolas:</h3>
+                            <div class="row">
+                                {{#each ListaConsolas}}
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="consolas" value="{{nombre}}" id="consola{{id}}">
+                                            <label class="form-check-label" for="consola{{id}}">
+                                                {{nombre}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                {{/each}}
+                            </div>
+                        </div>
+
+                        <div class="col-sm contImagenesProd">
+                           <div class="form-group">
+                                <label>Imagen Actual:</label>
+                                <img src="{{auxGame.img}}" alt="Imagen del juego" class="img-thumbnail">
+                                <input type="hidden" name="currentImgPath" value="{{auxGame.img}}">
+                            </div>
+                            <div class="form-group">
+                                <input type="file" name="img" id="agreImg" accept="image/*">
+                            </div>
+                            <div id="previews" class="imgCont"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <button class="btn btn-primary btn-block">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

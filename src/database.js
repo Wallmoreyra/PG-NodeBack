@@ -1,47 +1,3 @@
-// const {Pool} = require('pg');
-
-
-// const pool = new Pool({
-//     user: process.env.DB_USER,
-//     host: process.env.DB_HOST,
-//     database: process.env.DB_DBNAME,
-//     password: process.env.DB_PASSWORD,
-//     port: process.env.DB_PORT,
-
-//   });
-  
-//   pool.connect((err, client, release) => {
-//     if (err) {
-//         return console.error('Error al conectarse a la base de datos:', err.stack);
-//     }
-//     console.log('Conectado a la base de datos PostgreSQL.');
-//     release();
-//   });
-
-//   // Función para obtener datos de la tabla de prueba
-//   async function queryGamesDatabase() {
-//     try {
-//       const client = await pool.connect();
-//       const query = `
-//         SELECT * FROM employees;
-//       `;
-//       const result = await client.query(query);
-//       console.log('Resultados de la consulta:');
-//       console.log(result.rows);
-//       client.release();
-//     } catch (error) {
-//       console.error('Error al ejecutar consulta:', error);
-//     }
-//   }
-  
-//   // Llamar a la función para ejecutar la consulta en 'games'
-//   queryGamesDatabase();
-
-//   module.exports = pool;
-
-
-  //--------------------------------------------
-
 require('dotenv').config();
 
 const { Sequelize } = require('sequelize');
@@ -83,6 +39,6 @@ Games.belongsTo(Company, { foreignKey: 'companyId', onDelete: 'CASCADE', timesta
 
 // Exporta los modelos y la conexión
 module.exports = {
-  ...sequelize.models, // para poder importar los modelos así: const { Model } = require('./config/database');
-  conn: sequelize,     // para importar la conexión { conn } = require('./config/database');
+  ...sequelize.models,
+  conn: sequelize,
 };

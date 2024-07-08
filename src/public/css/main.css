@@ -1,0 +1,84 @@
+/*-------------------------------------------------------*/
+
+/* Estilos del Home page*/
+.banner {
+    background-color: #f8f8f8;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.banner-title {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.banner-content {
+    margin-left: 20px; /* Ajusta el margen interior para el contenido */
+}
+
+.banner-text {
+    color: #555;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.banner-list {
+    list-style-type: square;
+    margin-left: 20px;
+}
+
+.banner-list li {
+    color: #555;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+/*-------------------------------------------------------*/
+/* Stylos a las img de los formularios de productos */
+.card-body{
+    width: 80%;
+    margin-left: 10%;
+}
+.contImagenesProd{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.imgCont{
+    display: flex;
+    width: 300px;
+    width: 302px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 5px;
+    padding: 5px;
+}
+
+.prodImg{
+    width: 150px;
+}
+
+.imgContainer {
+    position: relative;
+    display: inline-block;
+    width: 150px;
+}
+
+.btnBorrImg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: transparent;
+    border: none;
+    color: red;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 4px;
+    font-size: 16px;
+    background: black;
+    width: 25px;
+}
+/*-------------------------------------------------------*/

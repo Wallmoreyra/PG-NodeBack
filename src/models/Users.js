@@ -12,5 +12,9 @@ module.exports = (sequelize) => {
       allowNull: false,
       unique: true
     },
-  }, { timestamps: false, freezeTableName: true });
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false
+    }
+  }, { timestamps: true, freezeTableName: true });
 };

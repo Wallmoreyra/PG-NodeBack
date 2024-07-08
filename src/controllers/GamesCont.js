@@ -92,6 +92,7 @@ const createGameDB = async(nombre, descripcion, img, categorias, consola, desarr
         if(ConsolDBID.length > 0 && CategDBID.length > 0 && GamesNameCreated === false){
             const juego = await createGameInDB(nombre, descripcion, img, CategDBID, ConsolDBID, CompDBID);
             //console.log(juego)
+            
             return juego;
         } else {
 
@@ -132,13 +133,74 @@ const deleteGameController = async (id) => {
 const updateGameController = async (id, data) => {
     try {
         const game = await updateGameByID(id, data);
+        //const game = data
         return game;
+
     } catch (error) {
         throw new Error(`Error: ${error.message}`);
     }
 };
 
+//Rutas de la dash:
 
+const renderGameForm = async (req, res) => {
+    try {
+        const ListaConsolas = [{"id": "1", "nombre": "PC"},{"id": "2", "nombre": "Nintendo DS"},{"id": "3", "nombre": "PlayStation"},{"id": "4", "nombre": "Xbox"},{"id": "5", "nombre": "Nintendo Switch"},{"id": "6", "nombre": "PlayStation 2"},{"id": "7", "nombre": "Sega Saturn"},{"id": "8", "nombre": "PlayStation 4"},{"id": "9", "nombre": "Xbox 360"},{"id": "10", "nombre": "Nintendo 64"}];
 
+        const ListaDesarrolladores = [{"id": "1", "nombre": "Steam"},{"id": "2", "nombre": "Valve Corporation"},{"id": "3", "nombre": "Rockstar Games"},{"id": "4", "nombre": "CD Projekt"},{"id": "5", "nombre": "Irrational Games"},{"id": "6", "nombre": "Riot Games"},{"id": "7", "nombre": "Playground Games"},{"id": "8", "nombre": "The Indie Stone"},{"id": "9", "nombre": "Rebellion Developments"},{"id": "10", "nombre": "Natsume Inc"}];
 
-module.exports = {gamesContr, createGameDB, getGameIDController, deleteGameController, updateGameController};
+        const ListaCategorias = [{"id": 1, "nombre": "RPG"},{"id": 2, "nombre": "Acción"},{"id": 3, "nombre": "Aventura"},{"id": 4, "nombre": "Arcade"},{"id": 5, "nombre": "Deportivo"},{"id": 6, "nombre": "Estrategia"},{"id": 7, "nombre": "Simulación"},{"id": 8, "nombre": "Musicales"}];
+
+        data = {ListaConsolas, ListaDesarrolladores, ListaCategorias};
+        //const game = await updateGameByID(id, data);
+        //const rendForm = res.render('games/new-game')
+        //return rendForm;
+        res.render('games/new-game', data)
+    } catch (error) {
+        throw new Error(`Error: ${error.message}`);
+    }
+};
+
+const renderUpdateForm = async (req, res) => {
+    try {
+        const ListaConsolas = [{"id": "1", "nombre": "PC"},{"id": "2", "nombre": "Nintendo DS"},{"id": "3", "nombre": "PlayStation"},{"id": "4", "nombre": "Xbox"},{"id": "5", "nombre": "Nintendo Switch"},{"id": "6", "nombre": "PlayStation 2"},{"id": "7", "nombre": "Sega Saturn"},{"id": "8", "nombre": "PlayStation 4"},{"id": "9", "nombre": "Xbox 360"},{"id": "10", "nombre": "Nintendo 64"}];
+
+        const ListaDesarrolladores = [{"id": "1", "nombre": "Steam"},{"id": "2", "nombre": "Valve Corporation"},{"id": "3", "nombre": "Rockstar Games"},{"id": "4", "nombre": "CD Projekt"},{"id": "5", "nombre": "Irrational Games"},{"id": "6", "nombre": "Riot Games"},{"id": "7", "nombre": "Playground Games"},{"id": "8", "nombre": "The Indie Stone"},{"id": "9", "nombre": "Rebellion Developments"},{"id": "10", "nombre": "Natsume Inc"}];
+
+        const ListaCategorias = [{"id": 1, "nombre": "RPG"},{"id": 2, "nombre": "Acción"},{"id": 3, "nombre": "Aventura"},{"id": 4, "nombre": "Arcade"},{"id": 5, "nombre": "Deportivo"},{"id": 6, "nombre": "Estrategia"},{"id": 7, "nombre": "Simulación"},{"id": 8, "nombre": "Musicales"}];
+
+        //data = {ListaConsolas, ListaDesarrolladores, ListaCategorias};
+        const auxGame = await getGameByID(req.params.id);
+        //console.log(auxID)
+        //const auxGame = await getGameByID(auxID)
+        //const auxGame = await getGameIDController(auxID);
+        //const game = await updateGameByID(id, data);
+        //const rendForm = res.render('games/new-game')
+        //return rendForm;
+        res.render('games/update-game',{ auxGame, ListaConsolas, ListaDesarrolladores, ListaCategorias })
+    } catch (error) {
+        throw new Error(`Error: ${error.message}`);
+    }
+};
+
+const renderAllGamesContr = async (req, res) => {
+    try {
+        let gamesAux = await gamesInDB(); 
+        //const ListaConsolas = [{"id": "1", "nombre": "PC"},{"id": "2", "nombre": "Nintendo DS"},{"id": "3", "nombre": "PlayStation"},{"id": "4", "nombre": "Xbox"},{"id": "5", "nombre": "Nintendo Switch"},{"id": "6", "nombre": "PlayStation 2"},{"id": "7", "nombre": "Sega Saturn"},{"id": "8", "nombre": "PlayStation 4"},{"id": "9", "nombre": "Xbox 360"},{"id": "10", "nombre": "Nintendo 64"}];
+
+        //const ListaDesarrolladores = [{"id": "1", "nombre": "Steam"},{"id": "2", "nombre": "Valve Corporation"},{"id": "3", "nombre": "Rockstar Games"},{"id": "4", "nombre": "CD Projekt"},{"id": "5", "nombre": "Irrational Games"},{"id": "6", "nombre": "Riot Games"},{"id": "7", "nombre": "Playground Games"},{"id": "8", "nombre": "The Indie Stone"},{"id": "9", "nombre": "Rebellion Developments"},{"id": "10", "nombre": "Natsume Inc"}];
+
+        //const ListaCategorias = [{"id": 1, "nombre": "RPG"},{"id": 2, "nombre": "Acción"},{"id": 3, "nombre": "Aventura"},{"id": 4, "nombre": "Arcade"},{"id": 5, "nombre": "Deportivo"},{"id": 6, "nombre": "Estrategia"},{"id": 7, "nombre": "Simulación"},{"id": 8, "nombre": "Musicales"}];
+
+        //data = {ListaConsolas, ListaDesarrolladores, ListaCategorias};
+        //const game = await updateGameByID(id, data);
+        //const rendForm = res.render('games/new-game')
+        //return rendForm;
+        //res.render('games/new-game', data)
+        res.render('games/all-games', {gamesAux})
+    } catch (error) {
+        throw new Error(`Error: ${error.message}`);
+    }
+};
+
+module.exports = {gamesContr, createGameDB, getGameIDController, deleteGameController, updateGameController, renderGameForm, renderUpdateForm, renderAllGamesContr};

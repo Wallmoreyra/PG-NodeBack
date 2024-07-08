@@ -1,5 +1,6 @@
 
-const { Console } = require('console');
+
+const { Op } = require('sequelize');
 const {Games, Category, Consol, Company} = require('../database');
 
 
@@ -345,10 +346,10 @@ const deleteGameByID = async (id) => {
 
 // Funcion del metodo PUT update
 const updateGameByID = async (id, data) => {
-    const { nombre, descripcion, img, categorias, consolas, company } = data;
+    const { nombre, descripcion, img, categorias, consolas, desarrollador } = data;
 
     try {
-        const game = await Games.findByPk(id, {
+        const gameInstance = await Games.findByPk(id, {
             include: [
                 { model: Category, through: { attributes: [] } },
                 { model: Consol, through: { attributes: [] } },
@@ -356,59 +357,62 @@ const updateGameByID = async (id, data) => {
             ]
         });
 
-        if (!game) {
+        if (!gameInstance) {
             throw new Error('No se encontró el juego con esa ID en la DB!!!');
         }
 
+        // Verificar si el nuevo nombre ya existe en otro juego
+        if (nombre && nombre.toLowerCase() !== gameInstance.nombre.toLowerCase()) {
+            const existingGame = await Games.findOne({ 
+                where: { 
+                    nombre: { [Op.iLike]: nombre } 
+                } 
+            });
+            if (existingGame) {
+                throw new Error('Ya existe un juego con ese nombre en la DB!!!');
+            }
+        }
+
         // Actualizar la información del juego
-        game.nombre = nombre || game.nombre;
-        game.descripcion = descripcion || game.descripcion;
-        game.img = img || game.img;
-        
-        await game.save();
+        gameInstance.nombre = nombre || gameInstance.nombre;
+        gameInstance.descripcion = descripcion || gameInstance.descripcion;
+        gameInstance.img = img || gameInstance.img;
+
+        await gameInstance.save();
 
         // Actualizar categorías
-        // if (categorias) {
-        //     const newCategories = await Category.findAll({ where: { id: categorias } });
-        //     await game.setCategories(newCategories);
-        // }
+        if (categorias) {
+            const newCategories = await Category.findAll({ 
+                where: { 
+                    [Op.or]: categorias.map(nombre => ({ nombre: { [Op.iLike]: nombre } }))
+                } 
+            });
+            await gameInstance.setCategories(newCategories);
+        }
 
-        // // Actualizar consolas
-        // if (consolas) {
-        //     const newConsoles = await Consol.findAll({ where: { id: consolas } });
-        //     await game.setConsols(newConsoles);
-        // }
+        // Actualizar consolas
+        if (consolas) {
+            const newConsoles = await Consol.findAll({ 
+                where: { 
+                    [Op.or]: consolas.map(nombre => ({ nombre: { [Op.iLike]: nombre } }))
+                } 
+            });
+            await gameInstance.setConsols(newConsoles);
+        }
 
-        // // Actualizar compañía
-        // if (company) {
-        //     const newCompany = await Company.findByPk(company);
-        //     if (newCompany) {
-        //         await game.setCompany(newCompany);
-        //     }
-        // }
+        // Actualizar compañía
+        if (desarrollador) {
+            const newCompany = await Company.findOne({ 
+                where: { 
+                    nombre: { [Op.iLike]: desarrollador } 
+                } 
+            });
+            if (newCompany) {
+                await gameInstance.setCompany(newCompany);
+            }
+        }
 
-        // Recargar las asociaciones actualizadas
-        // const updatedGame = await Games.findByPk(id, {
-        //     include: [
-        //         { model: Category, through: { attributes: [] } },
-        //         { model: Consol, through: { attributes: [] } },
-        //         Company
-        //     ]
-        // });
-
-        const GameActualizado = {
-            //id: updatedGame.id,
-            nombre: game.nombre,
-            descripcion: game.descripcion,
-            img: game.img,
-            //categorias: updatedGame.categories ? updatedGame.categories.map(category => category.nombre) : [],
-            //consolas: updatedGame.consols ? updatedGame.consols.map(consol => consol.nombre) : [],
-            //desarrollador: updatedGame.company ? updatedGame.company.nombre : null
-        };
-
-        console.log(GameActualizado);
-
-        return GameActualizado;
+        return getGameByID(id); // Usar la función que formatea el juego
 
     } catch (error) {
         throw new Error('Error al actualizar el Juego en la DB: ' + error.message);

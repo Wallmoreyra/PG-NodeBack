@@ -1,0 +1,50 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <div class="container-fluid">
+    <a class="navbar-brand" href="/">DashBoad</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/">Home</a>
+        </li>
+        {{!-- {{#if user}} --}}
+        <li class="nav-item">
+          <a class="nav-link" href="/games/all-games">Juegos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/users">Usuarios</a>
+        </li>
+        {{!-- <li class="nav-item">
+          <a class="nav-link" href="/">Compras</a>
+        </li> --}}
+        {{!-- {{/if}} --}}
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        {{!-- {{#if user}} --}}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Menu
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/games">Todos los Juegos</a></li>
+            <li><a class="dropdown-item" href="/games/add">Crear Juego</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/users/logout">Log-Out</a></li>
+          </ul>
+        </li>
+        {{!-- {{else}} --}}
+        <li class="nav-item">
+            <a href="/users/signin" class="nav-link">Login</a>
+        </li>
+        <li class="nav-item">
+            <a href="/users/signup" class="nav-link">Registrarse</a>
+        </li>
+        {{!-- {{/if}} --}}
+      </ul>
+    </div>
+  </div>
+  </div>
+</nav>
